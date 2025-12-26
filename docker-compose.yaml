@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  maestro:
+    build: ./bmw-conected-drive
+    container_name: maestro
+    restart: unless-stopped
+    privileged: true
+    network_mode: "host"
+    # depends_on:
+    #   android:
+    #     condition: service_healthy
+    volumes:
+      - ./bmw-conected-drive/flows:/flows  # Mount your Maestro YAML flows here
+      - ./apk:/apk  # Mount your APK files here
+      - /dev/bus/usb:/dev/bus/usb
+    ports:
+      - "9999:9999"  # Expose Maestro Studio web interface
+    entrypoint: ["/entrypoint.sh"]
+    command: ["tail", "-f", "/dev/null"]  # Keeps container running for exec
+
+networks:
+  default:
+    driver: bridge
