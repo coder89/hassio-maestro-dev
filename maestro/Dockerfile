@@ -1,54 +1,34 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base-debian:latest
+ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
 FROM ${BUILD_FROM}
 
-# Install necessary packages and wget for downloading tini
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl wget unzip bash build-essential cmake git libjson-c-dev libwebsockets-dev openjdk-17-jdk-headless android-tools-adb dos2unix && \
-    rm -rf /var/lib/apt/lists/*
+# Install necessary packages
+RUN apk add --no-cache \
+    curl \
+    unzip \
+    bash \
+    build-base \
+    cmake \
+    git \
+    json-c-dev \
+    libwebsockets-dev \
+    android-tools \
+    openjdk17-jre-headless \
+    dos2unix \
+    zlib-dev \
+    libuv-dev \
+    openssl-dev \
+    tini
 
-RUN git clone https://github.com/tsl0922/ttyd.git
-
-WORKDIR /ttyd
-RUN mkdir build
-WORKDIR /ttyd/build
-RUN cmake .. && \
-    make && make install
-
-ARG TARGETARCH
-
-# Install adb / platform-tools in a robust manner:
-# - Prefer the Debian package if available for the target architecture
-# - For amd64, prefer Google's platform-tools zip (gives latest tools)
-# - If packages are not available, try the platform-tools zip as a fallback
-RUN case "$TARGETARCH" in \
-    "amd64") \
-        echo "Fetching latest amd64 platform-tools from Google" && \
-        wget -q https://dl.google.com/android/repository/platform-tools-latest-linux.zip -O /tmp/platform-tools.zip && \
-        unzip -q /tmp/platform-tools.zip -d /opt && \
-        rm /tmp/platform-tools.zip || true ;\
-        ;; \
-    "arm64" | "arm" | "386") \
-        echo "Attempting to install platform-tools from apt for $TARGETARCH" && \
-        apt-get update && \
-        apt-get install -y --no-install-recommends android-sdk-platform-tools android-tools-adb adb || true && \
-        rm -rf /var/lib/apt/lists/* ;\
-        ;; \
-    *) \
-        echo "Unsupported architecture for adb installation: $TARGETARCH - attempting apt install fallback" && \
-        apt-get update && \
-        apt-get install -y --no-install-recommends android-sdk-platform-tools android-tools-adb adb || true && \
-        rm -rf /var/lib/apt/lists/* ;\
-        ;; \
-    esac && \
-    # Verify adb is available; if not present try fetching Google's platform-tools as a fallback
-    if ! command -v adb >/dev/null 2>&1 ; then \
-        echo "adb not found after package install, attempting platform-tools zip fallback" && \
-        wget -q https://dl.google.com/android/repository/platform-tools-latest-linux.zip -O /tmp/platform-tools.zip && \
-        unzip -q /tmp/platform-tools.zip -d /opt && \
-        rm -f /tmp/platform-tools.zip || true ; \
-    fi
-
-ENV PATH="/opt/platform-tools:${PATH}"
+# Build ttyd from source (cleaned up after install)
+RUN git clone https://github.com/tsl0922/ttyd.git /tmp/ttyd \
+    && cd /tmp/ttyd \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make -j$(nproc) \
+    && make install \
+    && cd / \
+    && rm -rf /tmp/ttyd
 
 # Install Maestro CLI
 ENV MAESTRO_VERSION=1.39.2
@@ -57,17 +37,6 @@ RUN curl -L "https://github.com/mobile-dev-inc/maestro/releases/download/cli-${M
   && rm maestro.zip \
   && ln -s /opt/maestro/maestro/bin/maestro /usr/local/bin/maestro \
   && chmod +x /usr/local/bin/maestro
-
-# Download and install tini based on the target architecture
-RUN case "$TARGETARCH" in \
-    "amd64") TINI_URL="https://github.com/krallin/tini/releases/download/v0.19.0/tini";; \
-    "arm64") TINI_URL="https://github.com/krallin/tini/releases/download/v0.19.0/tini-arm64";; \
-    "arm") TINI_URL="https://github.com/krallin/tini/releases/download/v0.19.0/tini-armhf";; \
-    "386") TINI_URL="https://github.com/krallin/tini/releases/download/v0.19.0/tini-i386";; \
-    *) echo "Unsupported architecture: $TARGETARCH" && exit 1;; \
-    esac && \
-    wget -q -O /usr/bin/tini $TINI_URL && \
-    chmod +x /usr/bin/tini
 
 # Copy root filesystem
 COPY rootfs /
@@ -109,5 +78,5 @@ LABEL \
   org.opencontainers.image.version="${BUILD_VERSION}"
 
 # Use tini as the init system
-ENTRYPOINT ["/usr/bin/tini", "--"]
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["/run.sh"]

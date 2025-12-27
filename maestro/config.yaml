@@ -16,32 +16,28 @@ startup: services
 ingress: true
 ingress_port: 7681
 init: false
-webui: http://[HOST]:[PORT:9999]/
 hassio_api: true
 map:
   - addon_config:rw
   - homeassistant_config
 ports:
   5037/tcp: 5037
-  9999/tcp: 9999
+  9999/tcp: null
 ports_description:
   5037/tcp: ADB server port
-  9999/tcp: Maestro Studio web interface port
+  9999/tcp: Maestro Studio web interface port - enable in Network tab if needed
 host_network: true
 usb: true
 map:
   - type: addon_config
-    read_only: False
-    path: /custom
+    read_only: false
+  - type: homeassistant_config
+    read_only: false
 options:
-  adb_port: 5037,
+  adb_port: 5037
   auto_connect_devices: []
-  flows: []
 schema:
   adb_port: port
   auto_connect_devices: [str]
-  flows:
-    - name: str
-      flow: str
-  studio: bool?
+  enable_studio: bool?
   log_level: list(trace|debug|info|notice|warning|error|fatal)?

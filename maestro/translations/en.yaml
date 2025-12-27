@@ -4,14 +4,19 @@ configuration:
     name: Log Level
     description: >-
       Defines the log level for the app/add-on.
-  device:
-    name: Specify ID or IP:PORT of the mobile device
+  adb_port:
+    name: ADB Port
     description: >-
-      Set this to device ID for USB connected devices or IP:PORT for TCP/IP
-      devices.
-  flows:
-    name: Maestro automation flows
+      Set the port for the ADB server. Default is 5037.
+  auto_connect_devices:
+    name: Auto-connect Devices
     description: >-
-      Defines the flows that will be executed on the device
+      A list of device IDs or IP:PORT combinations to auto-connect to on startup.
+      For USB connected devices, use the device ID. For TCP/IP devices, use the
+      IP:PORT format.
+  enable_studio:
+    name: Enable Maestro Studio
+    description: >-
+      Enable or disable the Maestro Studio web interface.
 network:
   9999/tcp: Maestro Studio interface (9999/tcp)
