@@ -1,73 +1,28 @@
-# Home Assistant App (Add-on): Cloudflared
+# Home Assistant App (Add-on): Maestross
 
-Cloudflared connects your Home Assistant Instance via a secure tunnel to a domain
-or subdomain at Cloudflare. This allows you to expose your Home Assistant
-instance and other services to the Internet without opening ports on your router.
-Additionally, you can utilize Cloudflare Zero Trust to further secure your
-connection.
+Maestro addon enables you to automate interactions with mobile devices or
+device emulators (Android or iOS) through Home Assistant. This can be useful
+for scenarios where mobile app or service doesn't expose public API to use
+within Home Assistant or voice assistants (like Google Assistant or Amazon Alexa).
 
 ## Disclaimer
 
-Please make sure you comply with the
-[Cloudflare Self-Serve Subscription Agreement][cloudflare-sssa] when using this
-app (add-on).
+Please make sure you set up a mobile device and make it accessible to the Home Assistant
+instance before using this app (add-on).
 
 ## Initial setup
 
 ### Prerequisites
 
-1. A domain name (e.g. example.com) using Cloudflare for DNS. If you don't have
-   one see [Domain name and Cloudflare set up][how-tos].
-   Please be aware that domains from **Freenom** do not work anymore, so you
-   have to chose / migrate to another registrar.
-1. If you have not done already, [activate Websockets in Cloudflare for your
-   domain][cloudflare-websockets].
-1. Decide between a local tunnel (managed by the app (add-on)) or a remote tunnel
-   (managed in Cloudflare's interface). [Learn more][addon-remote-or-local].
+1. Mobile device accessible by your Home Assistant. This can either be
+   emulator or a physical device connected via USB or TCP/IP protocol.
 1. This app (add-on) should be [installed][addon-installation] but not started yet.
+1. Maestro automation flows. You can also create a flow using Maestro Studio
+   (visual flow editor in your browser) which can be started as a separate service
+   through this addon.
 
 After completing the prerequisites, proceed below based on the type of tunnel you
 chose.
-
-### Local tunnel app (add-on) setup (recommended)
-
-In the following steps a Cloudflare Tunnel will be automatically created by the
-app (add-on) to expose your Home Assistant instance.
-
-If you only want to expose other services, you can leave `external_hostname`
-empty and set `additional_hosts` as [described below](#configuration).
-
-1. Configure the `http` integration in your Home Assistant config as
-   [described below](#configurationyaml)
-1. Set `external_hostname` app (add-on) option to the domain/subdomain
-   you want to use for remote access e.g. `ha.example.com`
-1. Start the app (add-on) (this will overwrite any existing DNS entries matching
-   `external_hostname` or `additional_hosts`)
-1. Paste the URL from the app (add-on) logs in a new tab to authenticate with Cloudflare
-1. Access your Home Assistant via the remote URL without port e.g.
-   `https://ha.example.com/`
-
-A tunnel should now be listed in your Cloudflare Teams dashboard.
-Please review the additional configuration options below.
-
-### Remote tunnel app (add-on) setup (advanced)
-
-In the following steps you will manually create a Cloudflare Tunnel in the Zero
-Trust Dashboard and provide the token to the app (add-on).
-
-1. Configure the `http` integration in to your Home Assistant config as
-   [described below](#configurationyaml)
-1. Create a Cloudflare Tunnel in the Cloudflare Teams dashboard following
-   [this how-to][addon-remote-tunnel]
-1. Set `tunnel_token` app (add-on) option to your [tunnel token][create-remote-managed-tunnel]
-   (all other configuration will be ignored)
-1. Start the app (add-on), check the logs to confirm everything went as
-   expected
-1. Access your Home Assistant via the remote URL without port e.g.
-   `https://ha.example.com/`
-
-Your tunnel should now be associated with the Cloudflared app (add-on). Any
-configuration changes should be made in the Cloudflare Teams dashboard.
 
 ## Configuration
 
@@ -337,7 +292,7 @@ please visit the [App (Add-On) Wiki on GitHub][addon-wiki].
 
 ## Authors & contributors
 
-The original setup of this repository is by [Tobias Brenner][tobias].
+The original setup of this repository is by [Lukasz Spas][coder89].
 
 For a full list of all authors and contributors,
 check [the contributor's page][contributors].
@@ -346,7 +301,7 @@ check [the contributor's page][contributors].
 
 MIT License
 
-Copyright (c) 2025 [homeassistant-apps][github-org]
+Copyright (c) 2025 [coder89][github-org]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -366,22 +321,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-[addon-installation]: https://github.com/homeassistant-apps/app-cloudflared#installation
-[addon-remote-tunnel]: https://github.com/homeassistant-apps/app-cloudflared/wiki/How-tos#how-to-configure-remote-tunnels
-[addon-remote-or-local]: https://github.com/homeassistant-apps/app-cloudflared/wiki/How-tos#local-vs-remote-managed-tunnels
-[addon-wiki]: https://github.com/homeassistant-apps/app-cloudflared/wiki
+[addon-installation]: https://github.com/coder89/hassio-maestro-dev#installation
+[addon-remote-tunnel]: https://github.com/coder89/hassio-maestro-dev/wiki/How-tos#how-to-configure-remote-tunnels
+[addon-remote-or-local]: https://github.com/coder89/hassio-maestro-dev/wiki/How-tos#local-vs-remote-managed-tunnels
+[addon-wiki]: https://github.com/coder89/hassio-maestro-dev/wiki
 [advancedconfiguration]: https://www.home-assistant.io/getting-started/configuration/
 [http-integration]: https://www.home-assistant.io/getting-started/configuration/
 [homeassistant-config-splitting]: https://www.home-assistant.io/docs/configuration/splitting_configuration/
 [homeassistant-config-packages]: https://www.home-assistant.io/docs/configuration/packages/
-[cloudflare-sssa]: https://www.cloudflare.com/en-gb/terms/
-[cloudflare-run_parameter]: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/tunnel-run-parameters/
-[cloudflare-websockets]: https://developers.cloudflare.com/network/websockets/
-[contributors]: https://github.com/homeassistant-apps/app-cloudflared/graphs/contributors
-[how-tos]: https://github.com/homeassistant-apps/app-cloudflared/wiki/How-tos
-[nginx_proxy_manager]: https://github.com/hassio-addons/addon-nginx-proxy-manager
-[tobias]: https://github.com/homeassistant-apps
-[troubleshooting]: https://github.com/homeassistant-apps/app-cloudflared/wiki/Troubleshooting
-[disablechunkedencoding]: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/configuration-file/ingress#disablechunkedencoding
-[create-remote-managed-tunnel]: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/#1-create-a-tunnel
-[github-org]: https://github.com/homeassistant-apps
+[maestro]: https://www.maestro.dev/
+[contributors]: https://github.com/coder89/hassio-maestro-dev/graphs/contributors
+[how-tos]: https://github.com/coder89/hassio-maestro-dev/wiki/How-tos
+[coder89]: https://github.com/coder89
+[troubleshooting]: https://github.com/coder89/hassio-maestro-dev/wiki/Troubleshooting
+[github-org]: https://github.com/coder89

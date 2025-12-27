@@ -1,6 +1,6 @@
 ---
-name: Report an issue with Home Assistant App (Add-On) Cloudflared
-description: Report an issue with Home Assistant App (Add-On) Cloudflared.
+name: Report an issue with Home Assistant App (Add-On) Maestro DEV
+description: Report an issue with Home Assistant App (Add-On) Maestro DEV.
 body:
   - type: markdown
     attributes:

@@ -1,43 +1,37 @@
-#!/command/with-contenv bashio
-# shellcheck shell=bash
-# ==============================================================================
-# Home Assistant App (Add-on): Cloudflared
-# Runs the Cloudflare Tunnel for Home Assistant
-# ==============================================================================
-declare config_file="/tmp/config.json"
-declare certificate="/data/cert.pem"
-declare -a options
+#!/usr/bin/env bash
+set -e
 
-# Set common cloudflared tunnel options
-options+=(--no-autoupdate)
-options+=(--metrics="0.0.0.0:36500")
-
-# Check for post_quantum option
-if bashio::config.true 'post_quantum'; then
-    bashio::log.trace "bashio::config.true 'post_quantum'"
-    options+=(--post-quantum)
+# Setup persistent ADB keys
+if [ ! -d /config/.android ]; then
+  mkdir -p /config/.android
 fi
+ln -sf /config/.android /root/.android
 
-# Check for additional run parameters
-if bashio::config.has_value 'run_parameters'; then
-    bashio::log.trace "bashio::config.has_value 'run_parameters'"
-    for run_parameter in $(bashio::config 'run_parameters'); do
-        bashio::log.trace "Adding run_parameter: ${run_parameter}"
-        options+=("${run_parameter}")
-    done
-fi
+# Get the configured ADB port
+ADB_PORT=${ADB_PORT:-5037}
 
-# Check if we run local or remote managed tunnel and set related options
-if bashio::config.has_value 'tunnel_token'; then
-    bashio::log.trace "bashio::config.has_value 'tunnel_token'"
-    options+=(run --token="$(bashio::config 'tunnel_token')")
+# Ensure platform-tools are on PATH at runtime (in case ENV didn't propagate)
+export PATH="/opt/platform-tools:${PATH}"
+
+# Start ADB server
+adb -a -P "${ADB_PORT}" start-server
+bashio::log.info "ADB server started on port ${ADB_PORT}"
+
+# Auto-connect to configured devices
+if [ -n "${AUTO_CONNECT_DEVICES}" ]; then
+    IFS=',' read -r -a devices <<< "${AUTO_CONNECT_DEVICES}"
+    bashio::log.info "Attempting to connect to configured devices"
+    /usr/local/bin/adb_connect.sh "${devices[@]}"
 else
-    bashio::log.debug "using ${config_file} config file"
-    options+=(--origincert="${certificate}")
-    options+=(--config="${config_file}")
-    options+=(run "$(bashio::config 'tunnel_name')")
+    bashio::log.info "No devices configured for auto-connect"
 fi
 
-bashio::log.info "Connecting Cloudflare Tunnel..."
-bashio::log.debug "cloudflared tunnel ${options[*]}"
-exec cloudflared tunnel "${options[@]}"
+# List connected devices
+bashio::log.info "Connected devices:"
+adb devices -l
+
+# Start ttyd with writable mode and restricted shell
+ttyd -p 7681 --writable /usr/local/bin/restricted-shell.sh &
+
+# Keep the add-on running
+tail -f /dev/null
