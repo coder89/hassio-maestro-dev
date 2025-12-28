@@ -1,6 +1,6 @@
-# Home Assistant App (Add-on): Maestross
+# Home Assistant App (Add-on): Maestro Mobile
 
-Maestro addon enables you to automate interactions with mobile devices or
+Maestro Mobile addon enables you to automate interactions with mobile devices or
 device emulators (Android or iOS) through Home Assistant. This can be useful
 for scenarios where mobile app or service doesn't expose public API to use
 within Home Assistant or voice assistants (like Google Assistant or Amazon Alexa).

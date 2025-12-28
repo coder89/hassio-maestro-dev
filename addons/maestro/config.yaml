@@ -1,7 +1,7 @@
 ---
-name: Maestro
+name: Maestro Mobile
 version: dev
-slug: maestro
+slug: maestro-mobile
 description: "Use a Maestro UI testing framework
   within Home Assistant to automate interactions with
   your mobile device or emulator."

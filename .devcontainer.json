@@ -1,10 +1,10 @@
 {
-  "name": "Devcontainer for Maestro DEV add-on development",
+  "name": "Devcontainer for Maestro Mobile add-on development",
   "image": "ghcr.io/home-assistant/devcontainer:2-addons",
   "appPort": ["7123:8123", "7357:4357", "9999:9999"],
   "postStartCommand": "bash devcontainer_bootstrap",
   "runArgs": ["-e", "GIT_EDITOR=code --wait", "--privileged"],
-  "workspaceFolder": "/mnt/supervisor/addons/local/${localWorkspaceFolderBasename}",
+  "workspaceFolder": "/mnt/supervisor/addons/local/${localWorkspaceFolderBasename}/addons",
   "workspaceMount": "source=${localWorkspaceFolder},target=${containerWorkspaceFolder},type=bind,consistency=cached",
   "containerEnv": {
     "WORKSPACE_DIRECTORY": "${containerWorkspaceFolder}"

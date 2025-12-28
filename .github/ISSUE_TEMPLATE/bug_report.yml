@@ -1,10 +1,10 @@
 ---
-name: Report an issue with Home Assistant App (Add-On) Maestro DEV
-description: Report an issue with Home Assistant App (Add-On) Maestro DEV.
+name: Report an issue with Home Assistant App (Add-On) Maestro Mobile
+description: Report an issue with Home Assistant App (Add-On) Maestro Mobile.
 body:
   - type: markdown
     attributes:
-      value: 'This issue form is for reporting bugs only!'
+      value: "This issue form is for reporting bugs only!"
   - type: textarea
     validations:
       required: true
@@ -16,7 +16,7 @@ body:
         Provide a clear and concise description of what the problem is.
   - type: markdown
     attributes:
-      value: '## Environment'
+      value: "## Environment"
   - type: input
     id: version
     validations:
