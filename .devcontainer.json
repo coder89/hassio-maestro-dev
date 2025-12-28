@@ -7,7 +7,8 @@
   "workspaceFolder": "/mnt/supervisor/addons/local/${localWorkspaceFolderBasename}",
   "workspaceMount": "source=${localWorkspaceFolder},target=${containerWorkspaceFolder},type=bind,consistency=cached",
   "containerEnv": {
-    "WORKSPACE_DIRECTORY": "${containerWorkspaceFolder}"
+    "WORKSPACE_DIRECTORY": "${containerWorkspaceFolder}",
+    "LOCAL_WORKSPACE_DIRECTORY": "${localWorkspaceFolder}"
   },
   "customizations": {
     "vscode": {
@@ -29,6 +30,6 @@
   "mounts": [
     "type=volume,target=/var/lib/docker",
     "type=volume,target=/mnt/supervisor",
-    "source=${localWorkspaceFolder}/custom_components,target=/config/custom_components,type=bind,consistency=cached"
+    "source=${localWorkspaceFolder}/custom_components,target=/mnt/supervisor/homeassistant/custom_components,type=bind,consistency=cached"
   ]
 }
