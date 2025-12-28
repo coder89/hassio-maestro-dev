@@ -1,0 +1,29 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add Maestro Mobile Flow",
+        "description": "Define a new Maestro testing flow."
+      },
+      "reconfigure": {
+        "title": "Edit Maestro Mobile Flow",
+        "description": "Update the flow YAML or device."
+      }
+    },
+    "abort": {
+      "already_configured": "This flow is already configured.",
+      "reconfigure_successful": "The flow configuration has been saved."
+    },
+    "error": {
+      "invalid_yaml": "Invalid YAML syntax"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Maestro Mobile Options",
+        "description": "Edit the flow configuration."
+      }
+    }
+  }
+}
