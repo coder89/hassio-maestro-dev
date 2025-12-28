@@ -12,14 +12,13 @@ arch:
   - armv7
   - i386
 url: "https://github.com/coder89/hassio-maestro-dev"
-startup: services
+startup: application
 ingress: true
 ingress_port: 7681
 init: false
 hassio_api: true
-map:
-  - addon_config:rw
-  - homeassistant_config
+hassio_role: default
+homeassistant_api: true
 ports:
   5037/tcp: 5037
   9999/tcp: null
@@ -28,11 +27,14 @@ ports_description:
   9999/tcp: Maestro Studio web interface port - enable in Network tab if needed
 host_network: true
 usb: true
+udev: true
 map:
   - type: addon_config
     read_only: false
   - type: homeassistant_config
-    read_only: false
+    read_only: true
+services:
+  - mqtt:need
 options:
   adb_port: 5037
   auto_connect_devices: []

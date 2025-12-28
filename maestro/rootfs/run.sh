@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bashio
 set -e
 
 # Setup persistent ADB keys
-if [ ! -d /addon_config/.android ]; then
-  mkdir -p /addon_config/.android
+if [ ! -d /config/.android ]; then
+  mkdir -p /config/.android
 fi
-ln -sf /addon_config/.android /root/.android
+ln -sf /config/.android /root/.android
 
 # Get the configured ADB port
 ADB_PORT=$(bashio::config 'adb_port' '5037')
@@ -41,13 +41,15 @@ ttyd -p 7681 --writable /usr/local/bin/restricted-shell.sh &
 ENABLE_STUDIO=$(bashio::config 'enable_studio' 'false')
 if [ "${ENABLE_STUDIO}" = "true" ]; then
     if [ "${CONNECTED_COUNT}" -gt 0 ]; then
-        bashio::log.info "Starting Maestro Studio on port 9999..."
-        maestro studio --port 9999 --no-open-browser 2>&1 &
+        bashio::log.info "Starting Maestro Studio..."
+        maestro studio --no-window 2>&1 &
     else
         bashio::log.warning "No devices connected via ADB → skipping Maestro Studio startup"
         bashio::log.info "Tip: Check 'adb devices' or add auto_connect_devices in config"
     fi
 fi
+
+/usr/local/bin/maestro_service.sh &
 
 # Keep the add-on running
 tail -f /dev/null

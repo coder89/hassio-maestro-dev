@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bashio
 
 bashio::log.info "Welcome to the ADB Server restricted shell. Only 'adb', 'wget', 'curl' and 'maestro' commands are allowed."
 

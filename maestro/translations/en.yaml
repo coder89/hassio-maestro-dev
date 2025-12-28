@@ -11,9 +11,9 @@ configuration:
   auto_connect_devices:
     name: Auto-connect Devices
     description: >-
-      A list of device IDs or IP:PORT combinations to auto-connect to on startup.
-      For USB connected devices, use the device ID. For TCP/IP devices, use the
-      IP:PORT format.
+      A list of device serial or IP[:PORT] combinations to auto-connect to on startup.
+      For USB connected devices, use the device serial. For TCP/IP devices, use the
+      IP[:PORT] format.
   enable_studio:
     name: Enable Maestro Studio
     description: >-

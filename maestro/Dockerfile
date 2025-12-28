@@ -17,6 +17,7 @@ RUN apk add --no-cache \
     zlib-dev \
     libuv-dev \
     openssl-dev \
+    mosquitto-clients \
     tini
 
 # Build ttyd from source (cleaned up after install)
@@ -42,8 +43,8 @@ RUN curl -L "https://github.com/mobile-dev-inc/maestro/releases/download/cli-${M
 COPY rootfs /
 
 # Convert scripts to Unix format and set executable permissions
-RUN dos2unix /run.sh /usr/local/bin/restricted-shell.sh /usr/local/bin/adb_connect.sh
-RUN chmod +x /run.sh /usr/local/bin/restricted-shell.sh /usr/local/bin/adb_connect.sh
+RUN dos2unix /run.sh /usr/local/bin/restricted-shell.sh /usr/local/bin/adb_connect.sh /usr/local/bin/maestro_service.sh
+RUN chmod +x /run.sh /usr/local/bin/restricted-shell.sh /usr/local/bin/adb_connect.sh /usr/local/bin/maestro_service.sh
 
 # Expose ADB and ttyd ports
 EXPOSE 5037 7681
