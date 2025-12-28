@@ -1,0 +1,14 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Setup Maestro Mobile",
+        "description": "Enter MQTT details if using MQTT for add-on communication.",
+        "data": {
+          "flows_path": "Path to store flows (default /config/maestro_flows)",
+          "mqtt_topic": "MQTT topic for triggers (default maestro_mobile/run_flow)"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+create_flow:
+  name: Create Maestro Flow
+  description: Create or edit a Maestro YAML flow file
+  fields:
+    flow_name:
+      name: Flow name
+      description: Filename (e.g., smoke_test.yaml)
+      required: true
+      example: smoke_test.yaml
+      selector:
+        text:
+    flow_content:
+      name: Flow content
+      description: YAML code for the flow
+      required: true
+      example: |
+        appId: com.example.app
+        ---
+        - launchApp:
+            appId: com.example.app
+        - tapOn:
+            text: "Login"
+      selector:
+        text:
+          multiline: true
+    device:
+      name: Device
+      description: Optional device to run on
+      required: false
+      selector:
+        text:

@@ -1,0 +1,11 @@
+{
+  "domain": "maestro_mobile",
+  "name": "Maestro Mobile",
+  "version": "1.0.0",
+  "documentation": "https://github.com/coder89/hassio-maestro-dev",
+  "requirements": [],
+  "dependencies": ["mqtt"],
+  "codeowners": ["@coder89"],
+  "config_flow": true,
+  "iot_class": "local_polling"
+}
