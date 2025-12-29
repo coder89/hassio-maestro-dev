@@ -32,14 +32,16 @@ map:
   - type: addon_config
     read_only: false
   - type: homeassistant_config
-    read_only: true
+    read_only: false
 services:
   - mqtt:need
 options:
   adb_port: 5037
   auto_connect_devices: []
+  auto_disable_triggers: false
 schema:
   adb_port: port
   auto_connect_devices: [str]
+  auto_disable_triggers: bool
   enable_studio: bool?
   log_level: list(trace|debug|info|notice|warning|error|fatal)?

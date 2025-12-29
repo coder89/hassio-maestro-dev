@@ -39,7 +39,7 @@ class MaestroStatusSensor(RestoreEntity, SensorEntity):
             "entry_type": DeviceEntryType.SERVICE,
         }
         self._attr_native_value = "idle"
-        self._entry.runtime_data = { "sensor": self }
+        self._entry.runtime_data["sensor"] = self
 
     async def async_added_to_hass(self) -> None:
         """Handle entity addition to hass."""

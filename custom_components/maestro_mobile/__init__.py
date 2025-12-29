@@ -8,6 +8,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import entity_platform, service
 from homeassistant.helpers.device_registry import DeviceEntry
+from homeassistant.helpers.entity_registry import RegistryEntryDisabler
 from homeassistant.components import mqtt
 
 DOMAIN = "maestro_mobile"
@@ -42,6 +43,8 @@ async def cleanup_orphaned_devices(hass: HomeAssistant, entry_id: str) -> None:
                 _LOGGER.info(f"Unlinked config entry {entry_id} from device {device.id} (no remaining entities)")
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    entry.runtime_data = {}
+
     """Set up Maestro Mobile from a config entry."""
     await hass.config_entries.async_forward_entry_setups(entry, ["sensor", "button"])
 
@@ -54,21 +57,43 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         topic = message.topic
         payload = message.payload
 
-        _LOGGER.error(f"Got stuff {topic}: {payload} {entry.entry_id}")
-
         if not topic.startswith("maestro_mobile/run_flow/status/"):
             return
+
+        entity_registry = er.async_get(hass)
 
         try:
             data = json.loads(payload)
             status = data.get("status")
+            disable = data.get("disable", False)
             if status not in ("running", "success", "failed"):
                 return
 
-            # Update sensor state
+            # Update sensor & button state
             entry.runtime_data["sensor"].update_state(status)
+            entry.runtime_data["button"].update_state(
+                disabled=status == "running"
+            )
+
+            if disable:
+                if status == "running":
+                    entity_registry.async_update_entity(
+                        entry.runtime_data["button"].entity_id,
+                        disabled_by=RegistryEntryDisabler.INTEGRATION
+                    )
+                else:
+                    entity_registry.async_update_entity(
+                        entry.runtime_data["button"].entity_id,
+                        disabled_by=None
+                    )
         except Exception as e:
             _LOGGER.error(f"Failed to parse status from {topic}: {e}")
+            entry.runtime_data["button"].update_state(disabled=False)
+            if disable:
+                entity_registry.async_update_entity(
+                    entry.runtime_data["button"].entity_id,
+                    disabled_by=None
+                )
 
     unsubscribe_func = await mqtt.async_subscribe(hass, f"maestro_mobile/run_flow/status/{entry.entry_id}", mqtt_status_listener)
 

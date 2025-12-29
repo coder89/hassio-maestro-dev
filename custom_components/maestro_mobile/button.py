@@ -2,7 +2,7 @@ import json
 import logging
 from homeassistant.components.button import ButtonEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceEntryType
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -42,8 +42,13 @@ class MaestroMobileRunButton(ButtonEntity):
             "serial_number": self._attr_device_name,
             "entry_type": DeviceEntryType.SERVICE,
         }
+        self._entry.runtime_data["button"] = self
+        self._attr_disabled = False
 
     async def async_press(self) -> None:
+        if self._attr_disabled:
+            return
+
         """Handle the button press."""
         flow_file = self._entry.data["flow_file"]
         device = self._entry.data.get("device")
@@ -73,3 +78,13 @@ class MaestroMobileRunButton(ButtonEntity):
         if status == "running":
             return "mdi:progress-clock"
         return "mdi:play-circle"
+
+    def update_state(self, disabled: bool | None = None) -> None:
+        changed = False
+
+        if disabled != None:
+            self._attr_disabled = disabled
+            changed = True
+
+        if changed:
+            self.async_write_ha_state()
