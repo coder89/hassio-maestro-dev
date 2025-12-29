@@ -8,8 +8,6 @@ description: "Use a Maestro UI testing framework
 arch:
   - aarch64
   - amd64
-  - armv7
-  - i386
 url: "https://github.com/coder89/hassio-maestro-dev"
 ingress: true
 ingress_port: 7681
