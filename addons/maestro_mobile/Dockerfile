@@ -1,35 +1,35 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
+ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.23
 FROM ${BUILD_FROM}
 
 # Install necessary packages
 RUN apk add --no-cache \
-    curl \
-    unzip \
-    bash \
-    build-base \
-    cmake \
-    git \
-    json-c-dev \
-    libwebsockets-dev \
-    android-tools \
-    openjdk17-jre-headless \
-    dos2unix \
-    zlib-dev \
-    libuv-dev \
-    openssl-dev \
-    mosquitto-clients \
-    tini
+  curl \
+  unzip \
+  bash \
+  build-base \
+  cmake \
+  git \
+  json-c-dev \
+  libwebsockets-dev \
+  android-tools \
+  openjdk17-jre-headless \
+  dos2unix \
+  zlib-dev \
+  libuv-dev \
+  openssl-dev \
+  mosquitto-clients \
+  tini
 
 # Build ttyd from source (cleaned up after install)
 RUN git clone https://github.com/tsl0922/ttyd.git /tmp/ttyd \
-    && cd /tmp/ttyd \
-    && mkdir build \
-    && cd build \
-    && cmake .. \
-    && make -j$(nproc) \
-    && make install \
-    && cd / \
-    && rm -rf /tmp/ttyd
+  && cd /tmp/ttyd \
+  && mkdir build \
+  && cd build \
+  && cmake .. \
+  && make -j$(nproc) \
+  && make install \
+  && cd / \
+  && rm -rf /tmp/ttyd
 
 # Install Maestro CLI
 ENV MAESTRO_VERSION=1.39.2
