@@ -32,6 +32,8 @@ jobs:
       - name: 🚀 Run app (add-on) information action
         id: information
         uses: homeassistant-apps/action-app-information@v2
+        with:
+          path: "./addons/maestro_mobile"
       - name: 🚀 Process possible slug override
         id: override
         run: |
