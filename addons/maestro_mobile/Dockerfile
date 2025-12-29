@@ -1,7 +1,9 @@
 ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.23
+# hadolint ignore=DL3006: We keep BUILD_FROM as a build-arg so CI can override it when needed.
 FROM ${BUILD_FROM}
 
 # Install necessary packages
+# hadolint ignore=DL3018: pinning apk packages in this image is brittle; keep as-is or add pins later.
 RUN apk add --no-cache \
   curl \
   unzip \
