@@ -1,5 +1,4 @@
 import os
-import yaml
 import logging
 import voluptuous as vol
 from homeassistant import config_entries
@@ -30,12 +29,6 @@ class MaestroMobileFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self.flow_name = user_input["flow_name"]
             self.flow_content = user_input["flow_content"]
             self.device = user_input.get("device")
-
-            # Validate YAML
-            try:
-                yaml.safe_load(self.flow_content)
-            except yaml.YAMLError:
-                errors["flow_content"] = "invalid_yaml"
 
             if not errors:
                 # Save to file
