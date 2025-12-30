@@ -15,7 +15,7 @@ configuration:
       For USB connected devices, use the device serial. For TCP/IP devices, use the
       IP[:PORT] format.
   auto_disable_triggers:
-    name: Automatically disable flow trigger (button) entities.
+    name: Auto-disable trigger button entities
     description: >-
       Enabling this option will result in button entities to be automatically disabled
       whenever maestro flow is being executed. This is to prevent unintentional re-trigger
