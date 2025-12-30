@@ -136,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        architecture: ${{ fromJson(needs.information.outputs.architectures) }}
+        architecture: ${{ needs.information.outputs.architectures }}
     steps:
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v6
