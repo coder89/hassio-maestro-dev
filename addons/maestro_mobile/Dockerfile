@@ -1,9 +1,7 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.23
-# hadolint ignore=DL3006: We keep BUILD_FROM as a build-arg so CI can override it when needed.
+ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
 FROM ${BUILD_FROM}
 
 # Install necessary packages
-# hadolint ignore=DL3018: pinning apk packages in this image is brittle; keep as-is or add pins later.
 RUN apk add --no-cache \
   curl \
   unzip \
@@ -24,14 +22,13 @@ RUN apk add --no-cache \
 
 # Build ttyd from source (cleaned up after install)
 RUN git clone https://github.com/tsl0922/ttyd.git /tmp/ttyd \
-  && cd /tmp/ttyd \
-  && mkdir build \
-  && cd build \
-  && cmake .. \
-  && make -j$(nproc) \
-  && make install \
-  && cd / \
-  && rm -rf /tmp/ttyd
+  && mkdir /tmp/ttyd/build
+WORKDIR /tmp/ttyd/build
+RUN cmake .. \
+  && make -j"$(nproc)" \
+  && make install
+WORKDIR /
+RUN rm -rf /tmp/ttyd
 
 # Install Maestro CLI
 ENV MAESTRO_VERSION=1.39.2

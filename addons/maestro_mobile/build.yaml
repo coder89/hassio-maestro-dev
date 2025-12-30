@@ -1,7 +1,7 @@
 ---
 build_from:
-  aarch64: ghcr.io/home-assistant/aarch64-base-debian:3.23
-  amd64: ghcr.io/home-assistant/amd64-base-debian:3.23
+  aarch64: ghcr.io/home-assistant/aarch64-base-debian:latest
+  amd64: ghcr.io/home-assistant/amd64-base-debian:latest
 args:
   BUILD_DATE: 2025-12-27T00:00:00Z
   BUILD_DESCRIPTION: A Home Assistant Add-On for Maestro UI testing framework
