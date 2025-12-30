@@ -1,6 +1,6 @@
 ---
 name: Maestro Mobile
-version: dev
+version: 1.0.0
 slug: maestro-mobile
 description: "Use a Maestro UI testing framework
   within Home Assistant to automate interactions with
