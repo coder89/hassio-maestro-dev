@@ -1,6 +1,6 @@
 ---
 name: Maestro Mobile
-version: dev
+version: 0.1.1
 slug: maestro-mobile
 description: "Use a Maestro UI testing framework
   within Home Assistant to automate interactions with
@@ -40,3 +40,4 @@ schema:
   auto_disable_triggers: bool
   enable_studio: bool?
   log_level: list(trace|debug|info|notice|warning|error|fatal)?
+image: ghcr.io/coder89/maestro-mobile/{arch}
