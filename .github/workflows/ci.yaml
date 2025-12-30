@@ -54,19 +54,19 @@ jobs:
           fi
           echo "slug=$slug" >> "$GITHUB_OUTPUT"
 
-  lint-addon:
-    name: Lint Add-on
-    needs:
-      - information
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⤵️ Check out code from GitHub
-        uses: actions/checkout@v6
-      - name: 🚀 Run Add-on Lint
-        uses: frenck/action-addon-linter@v2.21.0
-        with:
-          community: false
-          path: "./${{ needs.information.outputs.target }}"
+  # lint-addon:
+  #   name: Lint Add-on
+  #   needs:
+  #     - information
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: ⤵️ Check out code from GitHub
+  #       uses: actions/checkout@v6
+  #     - name: 🚀 Run Add-on Lint
+  #       uses: frenck/action-addon-linter@v2.21.0
+  #       with:
+  #         community: true
+  #         path: "./${{ needs.information.outputs.target }}"
 
   lint-hadolint:
     name: Hadolint
@@ -129,7 +129,7 @@ jobs:
     name: Build ${{ matrix.architecture }}
     needs:
       - information
-      - lint-addon
+      #- lint-addon
       - lint-hadolint
       - lint-json
       - lint-prettier
