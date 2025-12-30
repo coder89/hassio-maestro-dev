@@ -1,7 +1,9 @@
 ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
+# hadolint ignore=DL3006
 FROM ${BUILD_FROM}
 
 # Install necessary packages
+# hadolint ignore=DL3018
 RUN apk add --no-cache \
   curl \
   unzip \
